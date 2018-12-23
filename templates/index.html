@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=------key---------------"></script>
+		<style type="text/css">
+		body {
+			margin : 0;
+			padding : 0;
+		}
+		.container {
+			width : 100%;
+			height : 100vh;
+			background-image: url({{ url_for('static', filename='bg2.png') }});
+			background-position : center top;
+			background-repeat : no-repeat;
+			background-size : cover;
+			paddig-top : 100px;
+		}
+		#map {
+			width : 100%;
+			height : 700px;
+			margin : 0 auto;
+		}
+		.bg {
+			width : 100%;
+			height : 100vh;
+			background-image: url({{ url_for('static', filename='bg1.png') }});
+			background-position : center top;
+			background-repeat : no-repeat;
+			background-size : auto;
+		}
+		</style>
+        <title>IronMouse Hiba Location</title>
+         <script>
+
+  
+
+
+  </script>
+    </head>
+
+    <body>
+		<div class="container">
+		
+			<div id="map"></div>
+			<div class="bg"><div>
+			
+		</div>
+    </body>
+	
+	<script> 
+	var daumX = "";
+	var daumY = "";
+	
+	var settings = {
+	  "async": true,
+	  "crossDomain": true,
+	  "url": "http://203.250.148.89:7579/Mobius/ironmouse/gps/latest",
+	  "cache": false,
+	  "method": "GET",
+	  "headers": {
+	    "Accept": "application/json",
+	    "X-M2M-RI": "12345",
+	    "X-M2M-Origin": "SOrigin",
+	    "cache-control": "no-cache",
+	    "Postman-Token": "29725a6d-9056-4ed0-86ad-b12bab988bf5",
+		"Content-Type" : "application/json; charset=UTF-8",
+		"Access-Control-Allow-Origin" : "*",
+		"Access-Control-Allow-Methods" : "*",
+		"Access-Control-Allow-Headers" : "Authorization"
+	  }
+}
+
+	
+		$(document).ready(function() {
+			(setInterval(function() {
+				$.ajax(settings).done(function (response) {
+				console.log("ok");
+				daumX = response["m2m:cin"].con.split(',')[0];
+				daumY = response["m2m:cin"].con.split(',')[1];
+
+				var container = document.getElementById('map');
+				var options = {
+					center: new daum.maps.LatLng(daumX, daumY),
+					level: 1
+				};
+
+				var map = new daum.maps.Map(container, options);
+				
+				var coords = new daum.maps.LatLng(daumX, daumY);
+
+				var marker = new daum.maps.Marker({
+					map: map,
+					position: coords
+				});
+				
+				var infowindow = new daum.maps.InfoWindow({
+				content: '<div style="width:120px;text-align:center;padding:1px 3px;">ironMouse Hiba</div>'
+				});
+				infowindow.open(map, marker);
+
+				});
+			}, 2000)());
+		});
+	</script>
+</html>
